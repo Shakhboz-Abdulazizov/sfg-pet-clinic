@@ -1,10 +1,7 @@
 package com.example.petclinicweb.bootstrap;
 
 import com.example.petclinicdata.models.*;
-import com.example.petclinicdata.services.OwnerService;
-import com.example.petclinicdata.services.PetTypeService;
-import com.example.petclinicdata.services.SpecialityService;
-import com.example.petclinicdata.services.VetService;
+import com.example.petclinicdata.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +14,14 @@ public class DataLoader implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialityService specialityService;
+    private final VisitService visitService;
 
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService) {
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialityService specialityService, VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialityService = specialityService;
+        this.visitService = visitService;
     }
 
     @Override
@@ -48,7 +47,9 @@ public class DataLoader implements CommandLineRunner {
         owner1.setAddress("Shahriobod, 316");
         owner1.setCity("Tashkent");
         owner1.setTelephone("71xxxxxxx");
-        ownerService.save(owner1);
+        owner1 = ownerService.save(owner1);
+
+
 
         Pet pet1 = new Pet();
         pet1.setName("shDog");
@@ -56,6 +57,12 @@ public class DataLoader implements CommandLineRunner {
         pet1.setBirthDate(LocalDate.now());
         pet1.setOwner(owner1);
         owner1.getPets().add(pet1);
+
+        Visit dogVisit = new Visit();
+        dogVisit.setPet(pet1);
+        dogVisit.setDate(LocalDate.now());
+        dogVisit.setDescription("Sneeze Dog");
+        visitService.save(dogVisit);
 
         Owner owner2 = new Owner();
         owner2.setFirstName("Elbek");
